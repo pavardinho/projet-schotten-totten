@@ -19,8 +19,8 @@ public class Plateau {
         }
 
         pioche = new ArrayList<Carte>();
-        for (Couleur c : Couleur.values()) {
-            for (Valeur v : Valeur.values()) {
+        for (CarteNormale.Couleur c : CarteNormale.Couleur.values()) {
+            for (CarteNormale.Valeur v : CarteNormale.Valeur.values()) {
                 pioche.add(new CarteNormale(v, c));
             }
         }
