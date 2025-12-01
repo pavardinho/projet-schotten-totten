@@ -1,6 +1,8 @@
 package com.schottenTotten.model;
 
+import java.util.ArrayList;
 import java.util.List;
+/// import com.schottenTotten.model.Joueur;
 
 enum Statut { NON_RECLAMEE, RECLAMEE_J1, RECLAMEE_J2 }
 
@@ -11,14 +13,29 @@ public class Borne {
     private Statut statut;
 
     public int getNumero() { return this.numero; }
-    public List<Carte> getCarteJ1() { return this.cartesJoueur1; }
-    public List<Carte> getCarteJ2() { return this.cartesJoueur2; }
-    public Statut geStatut() { return this.statut; }
+    public List<Carte> getCarteJoueur1() { return this.cartesJoueur1; }
+    public List<Carte> getCarteJoueur2() { return this.cartesJoueur2; }
+    public Statut getStatut() { return this.statut; }
 
-    public Borne(int numero, List<Carte> cartesJ1, List<Carte> cartesJ2, Statut statut){
+
+    public Borne(int numero){
         this.numero = numero;
-        this.cartesJoueur1 = cartesJ1;
-        this.cartesJoueur2 = cartesJ2;
-        this.statut = statut;
+        this.cartesJoueur1 = new ArrayList<>();
+        this.cartesJoueur2 = new ArrayList<>();
+        this.statut = Statut.NON_RECLAMEE;
+    }
+
+    public boolean estPleine(Joueur j){
+        if ( this.cartesJoueur1.size() == 3 || this.cartesJoueur2.size() == 3 ){ /// ATTENTION CETTE CONDITION EST A MODIFIER UNE FOIS QUE J'AURAI CRÉÉ JOUEUR
+            return true;                                                            /// ELLE DEVRA IDENTIFIER LE JOUEUR QUI JOUE
+        }
+        return false;
+    }
+
+    public boolean estControlee(){
+        if (this.statut != Statut.NON_RECLAMEE){
+            return true;
+        }
+        return false;
     }
 }

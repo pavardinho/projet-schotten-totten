@@ -1,9 +1,10 @@
 package com.schottenTotten.model;
 
-enum Couleur {A, B, C, D, E, F}
-enum Valeur {UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF}
-
 public class CarteNormale extends Carte {
+
+    enum Valeur {UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF}
+    public enum Couleur {VERT, BLEU, ROUGE, JAUNE, VIOLET, MARRON}
+
     private Valeur valeur;
     private Couleur couleur;
 
@@ -11,6 +12,7 @@ public class CarteNormale extends Carte {
     public Couleur getCouleur() { return this.couleur; }
 
     public CarteNormale(Valeur v, Couleur c){
+        super(v.name() + "_" + c.name());
         this.valeur = v;
         this.couleur = c;
     }
