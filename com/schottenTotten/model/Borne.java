@@ -53,4 +53,15 @@ public class Borne {
         }
         return false;
     }
+
+    // Permet à l'ia de récupérer les cartes jqu'elle a jouées sur une borne
+    public List<Carte> getCartesJoueur(Joueur j){
+        if ( j == this.joueur1 ){
+            return this.cartesJoueur1;
+        }
+        else if ( j == this.joueur2 ){
+            return this.cartesJoueur2;
+        }
+        return new ArrayList<>();
+    }
 }
