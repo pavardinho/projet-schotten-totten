@@ -1,9 +1,9 @@
 package com.schottenTotten.model;
 
-enum Valeur {UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF}
-enum Couleur {VERT, BLEU, ROUGE, JAUNE, VIOLET, MARRON}
-
 public class CarteNormale extends Carte {
+
+    public enum Valeur {UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF}
+    public enum Couleur {VERT, BLEU, ROUGE, JAUNE, VIOLET, MARRON}
 
     private Valeur valeur;
     private Couleur couleur;
