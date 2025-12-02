@@ -6,8 +6,12 @@ public interface ModeDeJeu {
 
     public int getNbBornes();
     public int getCartesMaxParBornes();
+    public int getNbCarteMain();
+
     public void setNbBornes(int nb);
     public void setCartesMaxParBornes(int nb);
+    public void setNbCarteMain(int nb);
+
 
     public void initialiserJeu(Jeu j);
     public boolean peutReclamerBorne(Joueur j, Borne b, Plateau p);

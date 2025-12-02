@@ -79,7 +79,10 @@ public class VueConsole implements Vue {
         System.out.println("[ ] Que voulez-vous faire ?");
     }
 
-    public void afficherMain(List<Carte> main){
-
+    public void afficherMain(String joueurName, List<Carte> main){
+        System.out.println("A ton tour "+joueurName+", voici ta main :");
+        for (int i = 0; i < main.size(); i++) {
+            System.out.println("["+(i+1)+"] "+main.get(i).getNom());
+        }
     };
 }

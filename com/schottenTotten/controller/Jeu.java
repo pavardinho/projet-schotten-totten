@@ -26,13 +26,38 @@ public class Jeu {
     public void setIndexJoueurCourant(int i) { this.indexJoueurCourant = i; }
     public void setNbJoueurs(int n) { this.nbJoueurs = n; }
 
+    public boolean aJouerTour(Scanner sc) {
+        System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
+        int e = sc.nextInt();
+        while (!(0 < e && e < mode.getNbCarteMain())) {
+            System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
+            e = sc.nextInt();
+        }
+
+        System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
+        e = sc.nextInt();
+        while (!(0 < e && e < mode.getNbBornes())) {
+            System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
+        e = sc.nextInt();
+        }
+
+        
+
+    }
+
     public void boucleJeu(Scanner sc){
+        
+        mode.initialiserJeu(this);
+        
         boolean finJeu = false;
         while (!finJeu) {
             vue.afficherPlateau(plateau, mode);
-            String e = sc.nextLine();
+            Joueur j = getJoueur(indexJoueurCourant);
+            vue.afficherMain(j.getNom(), j.getMain());
+            while (!aJouerTour(sc)) { }
 
-            
+
+            indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
         }
     }
 

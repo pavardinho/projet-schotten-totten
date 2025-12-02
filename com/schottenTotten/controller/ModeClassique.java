@@ -1,25 +1,32 @@
 package com.schottenTotten.controller;
 
-import com.schottenTotten.model.Borne;
-import com.schottenTotten.model.CarteTactique;
-import com.schottenTotten.model.Joueur;
-import com.schottenTotten.model.Plateau;
+import java.util.List;
+
+import com.schottenTotten.model.*;
 
 public class ModeClassique implements ModeDeJeu{
 
     private int nbBornes = 9;
     private int cartesMaxParBornes = 3;
+    private int nbCarteMain = 6;
 
     public int getNbBornes() { return this.nbBornes; }
     public int getCartesMaxParBornes() { return this.cartesMaxParBornes; }
+    public int getNbCarteMain() { return this.nbCarteMain; }
 
 
     public void setNbBornes(int nb) { this.nbBornes = nb; }
     public void setCartesMaxParBornes(int nb) { this.cartesMaxParBornes = nb; }
+    public void setNbCarteMain(int nb) { this.nbCarteMain = nb; }
 
     public void initialiserJeu(Jeu j){
+        List<Carte> pioche = j.getPlateau().getPioche();
         for (int i = 0; i < j.getNbJoueurs(); i++) {
-            
+            Joueur joueur = j.getJoueur(i);
+            for (int k = 0; k < nbCarteMain; k++) {
+                joueur.recevoirCarte(pioche.remove(0));
+                System.out.println(pioche.size());
+            }
         }
     }
 

@@ -8,8 +8,8 @@ public interface Vue {
     public void afficherMenuPrincipal();
     
     public void afficherPlateau(Plateau p, ModeDeJeu mode);
+    public void afficherMain(String joueurName, List<Carte> main);
 
     public void afficherParamètres(Jeu j);
 
-    public void afficherMain(List<Carte> main);
 }
