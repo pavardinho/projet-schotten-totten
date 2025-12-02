@@ -15,7 +15,7 @@ public class Plateau {
     public Plateau(int nbBornes){
         bornes = new ArrayList<Borne>();
         for (int i = 0; i < nbBornes; i++) {
-            bornes.add(new Borne(i));
+            bornes.add(new Borne(i+1));
         }
 
         pioche = new ArrayList<Carte>();

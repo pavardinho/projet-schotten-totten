@@ -3,9 +3,10 @@ package com.schottenTotten.model;
 import java.util.ArrayList;
 import java.util.List;
 
-enum Statut { NON_RECLAMEE, RECLAMEE_J1, RECLAMEE_J2 }
 
 public class Borne {
+    public enum Statut { NON_RECLAMEE, RECLAMEE_J1, RECLAMEE_J2 };
+
     private int numero;
     private List<Carte> cartesJoueur1;
     private List<Carte> cartesJoueur2;
@@ -22,8 +23,8 @@ public class Borne {
 
     public Borne(int numero){
         this.numero = numero;
-        this.cartesJoueur1 = new ArrayList<>();
-        this.cartesJoueur2 = new ArrayList<>();
+        this.cartesJoueur1 = new ArrayList<Carte>();
+        this.cartesJoueur2 = new ArrayList<Carte>();
         this.statut = Statut.NON_RECLAMEE;
     }
 
