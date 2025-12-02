@@ -1,6 +1,5 @@
 package com.schottenTotten.model;
 
-
 public class CarteNormale extends Carte {
 
     public enum Valeur {UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF}

@@ -26,4 +26,17 @@ public class Plateau {
         }
         Collections.shuffle(pioche);
     }
+
+    public Carte piocher() {
+        if (this.pioche == null || this.pioche.isEmpty()) {
+            return null;
+        }
+        return this.pioche.remove(0);
+    }
+
+    // Constructeur secondaire : Spécialement pour les tests que j'ai réalisé
+    public Plateau(List<Borne> bornes, List<Carte> pioche) {
+        this.bornes = bornes;
+        this.pioche = pioche;
+    }
 }
