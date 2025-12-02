@@ -15,9 +15,55 @@ public class VueConsole implements Vue {
         System.out.println("[ ] Que voulez-vous faire ?");
 
     }
-    public void afficherPlateau(Plateau p){
-        System.out.println("#####  PLATEAU #####");
+
+    public void afficherPlateau(Plateau p, ModeDeJeu mode){
+        System.out.println("#####################  PLATEAU ##################### ");
         System.out.println("Joueur 1\t\tBornes\t\t\tJoueur 2");
+
+        List<Borne> bs = p.getBornes();
+        List<Carte> pioche = p.getPioche();
+
+        for (Borne b : bs) {
+
+            int num = b.getNumero();
+            String affichage = "";
+            Borne.Statut st = b.getStatut();
+
+            if (st == Borne.Statut.NON_RECLAMEE) {
+                affichage = " "+num+" ";
+            } else if (st == Borne.Statut.RECLAMEE_J1) {
+                affichage = "<"+num+" ";
+            } else if (st == Borne.Statut.RECLAMEE_J2) {
+                affichage = " "+num+">";
+            }
+
+            int cartesMaxParBornes = mode.getCartesMaxParBornes();
+
+            List<Carte> l1 = b.getCarteJoueur1();
+            String affichCarte1 = "";
+            int nbCartel1 = l1.size();
+            for (int i = 0; i < cartesMaxParBornes; i++) {
+                if (i <  nbCartel1) {
+                    affichCarte1 = "["+l1.get(i).getNom()+"]" + affichCarte1;
+                } else {
+                    affichCarte1 = "\t" + affichCarte1;
+                }
+            }
+
+            List<Carte> l2 = b.getCarteJoueur2();
+            String affichCarte2 = "";
+            int nbCartel2 = l2.size();
+            for (int i = 0; i < cartesMaxParBornes; i++) {
+                if (i <  nbCartel2) {
+                    affichCarte2 += "["+l2.get(i).getNom()+"]";
+                } else {
+                    affichCarte2 += "\t";
+                }
+            }
+            
+            System.out.println(affichCarte1+"["+affichage+"]"+affichCarte2);
+        }
+        System.out.println("Pioche : "+pioche.size()+" carte(s) restante(s)");
     }
 
     public void afficherParamètres(Jeu j){

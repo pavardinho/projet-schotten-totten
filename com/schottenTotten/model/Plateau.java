@@ -12,15 +12,15 @@ public class Plateau {
     public List<Borne> getBornes() { return this.bornes; }
     public List<Carte> getPioche() { return this.pioche; }
 
-    Plateau(int nbBornes){
+    public Plateau(int nbBornes){
         bornes = new ArrayList<Borne>();
         for (int i = 0; i < nbBornes; i++) {
-            bornes.add(new Borne(i));
+            bornes.add(new Borne(i+1));
         }
 
         pioche = new ArrayList<Carte>();
-        for (Couleur c : Couleur.values()) {
-            for (Valeur v : Valeur.values()) {
+        for (CarteNormale.Couleur c : CarteNormale.Couleur.values()) {
+            for (CarteNormale.Valeur v : CarteNormale.Valeur.values()) {
                 pioche.add(new CarteNormale(v, c));
             }
         }

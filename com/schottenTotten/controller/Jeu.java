@@ -29,8 +29,10 @@ public class Jeu {
     public void boucleJeu(Scanner sc){
         boolean finJeu = false;
         while (!finJeu) {
-            vue.afficherPlateau(plateau);
+            vue.afficherPlateau(plateau, mode);
             String e = sc.nextLine();
+
+            
         }
     }
 
@@ -67,6 +69,8 @@ public class Jeu {
         for (int i = 0; i < joueurs.length; i++) {
             this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
         }
+        this.indexJoueurCourant = 0;
+        this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();
     }
     
