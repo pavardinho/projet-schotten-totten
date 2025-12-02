@@ -33,6 +33,14 @@ public class Borne {
         this.joueur2 = j2;
     }
 
+    public void addCarte(Joueur j, Carte c){
+        if (j == joueur1) {
+            cartesJoueur1.add(c);
+        } else {
+            cartesJoueur2.add(c);
+        }
+    }
+
     public boolean estPleine(Joueur j){
         if ( j == this.joueur1 ){
             if (this.cartesJoueur1.size() >= 3){

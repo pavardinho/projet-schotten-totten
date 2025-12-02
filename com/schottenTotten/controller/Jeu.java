@@ -26,23 +26,37 @@ public class Jeu {
     public void setIndexJoueurCourant(int i) { this.indexJoueurCourant = i; }
     public void setNbJoueurs(int n) { this.nbJoueurs = n; }
 
-    public boolean aJouerTour(Scanner sc) {
+    public void jouerCarte(Joueur j, Carte c, Borne b){
+        j.retirerCarte(c);
+        b.addCarte(j, c);
+    }
+
+    public void joueTour(Scanner sc, Joueur j) {
         System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
         int e = sc.nextInt();
-        while (!(0 < e && e < mode.getNbCarteMain())) {
+        while (!(0 < e && e <= mode.getNbCarteMain())) {
             System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
             e = sc.nextInt();
         }
 
+        Carte c = j.getMain().get(e-1);
+
         System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
         e = sc.nextInt();
-        while (!(0 < e && e < mode.getNbBornes())) {
+        while (!(0 < e && e <= mode.getNbBornes())) {
             System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
-        e = sc.nextInt();
+            e = sc.nextInt();
         }
 
-        
+        while (plateau.getBornes().get(e-1).estPleine(j) || !(0 < e && e <= mode.getNbBornes())) {
+            System.out.println("La borne choisit est déja remplie, choisissez-en une autre (1-"+mode.getNbBornes()+") : ");
+            e = sc.nextInt();
+        }
 
+        Borne b = plateau.getBornes().get(e-1);
+
+        jouerCarte(j, c, b);
+        j.recevoirCarte(plateau.piocher());
     }
 
     public void boucleJeu(Scanner sc){
@@ -54,7 +68,7 @@ public class Jeu {
             vue.afficherPlateau(plateau, mode);
             Joueur j = getJoueur(indexJoueurCourant);
             vue.afficherMain(j.getNom(), j.getMain());
-            while (!aJouerTour(sc)) { }
+            joueTour(sc, j);
 
 
             indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;

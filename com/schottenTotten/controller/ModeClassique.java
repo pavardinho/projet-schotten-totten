@@ -1,7 +1,5 @@
 package com.schottenTotten.controller;
 
-import java.util.List;
-
 import com.schottenTotten.model.*;
 
 public class ModeClassique implements ModeDeJeu{
@@ -20,13 +18,15 @@ public class ModeClassique implements ModeDeJeu{
     public void setNbCarteMain(int nb) { this.nbCarteMain = nb; }
 
     public void initialiserJeu(Jeu j){
-        List<Carte> pioche = j.getPlateau().getPioche();
+        Plateau p = j.getPlateau();
         for (int i = 0; i < j.getNbJoueurs(); i++) {
             Joueur joueur = j.getJoueur(i);
             for (int k = 0; k < nbCarteMain; k++) {
-                joueur.recevoirCarte(pioche.remove(0));
-                System.out.println(pioche.size());
+                joueur.recevoirCarte(p.piocher());
             }
+        }
+        for (Borne b : j.getPlateau().getBornes()) {
+            b.setJoueurs(j.getJoueur(0), j.getJoueur(1));
         }
     }
 

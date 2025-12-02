@@ -12,7 +12,7 @@ public class CarteNormale extends Carte {
     public Couleur getCouleur() { return this.couleur; }
 
     public CarteNormale(Valeur v, Couleur c){
-        super(v.name() + "_" + c.name().charAt(0));
+        super(v.name() + "_" + c.name());
         this.valeur = v;
         this.couleur = c;
     }
