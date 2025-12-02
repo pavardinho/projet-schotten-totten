@@ -92,7 +92,7 @@ public class Jeu {
         this.mode = new ModeClassique();
         this.joueurs = new Joueur[this.nbJoueurs];
         for (int i = 0; i < joueurs.length; i++) {
-            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
+           this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
         }
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());

@@ -2,7 +2,6 @@ package com.schottenTotten.model;
 
 import java.util.ArrayList;
 import java.util.List;
-/// import com.schottenTotten.model.Joueur;
 
 
 public class Borne {
@@ -12,6 +11,9 @@ public class Borne {
     private List<Carte> cartesJoueur1;
     private List<Carte> cartesJoueur2;
     private Statut statut;
+
+    private Joueur joueur1;
+    private Joueur joueur2;
 
     public int getNumero() { return this.numero; }
     public List<Carte> getCarteJoueur1() { return this.cartesJoueur1; }
@@ -26,9 +28,21 @@ public class Borne {
         this.statut = Statut.NON_RECLAMEE;
     }
 
+    public void setJoueurs(Joueur j1, Joueur j2){
+        this.joueur1 = j1;
+        this.joueur2 = j2;
+    }
+
     public boolean estPleine(Joueur j){
-        if ( this.cartesJoueur1.size() == 3 || this.cartesJoueur2.size() == 3 ){ /// ATTENTION CETTE CONDITION EST A MODIFIER UNE FOIS QUE J'AURAI CRÉÉ JOUEUR
-            return true;                                                            /// ELLE DEVRA IDENTIFIER LE JOUEUR QUI JOUE
+        if ( j == this.joueur1 ){
+            if (this.cartesJoueur1.size() >= 3){
+                return true;
+            }
+        }
+        else if ( j == this.joueur2 ){
+            if (this.cartesJoueur2.size() >= 3){
+                return true;
+            }
         }
         return false;
     }
