@@ -12,6 +12,8 @@ public class Plateau {
     public List<Borne> getBornes() { return this.bornes; }
     public List<Carte> getPioche() { return this.pioche; }
 
+    public int getNbCartesPioche() { return this.pioche.size(); }
+
     public Plateau(int nbBornes){
         bornes = new ArrayList<Borne>();
         for (int i = 0; i < nbBornes; i++) {
@@ -24,7 +26,7 @@ public class Plateau {
                 pioche.add(new CarteNormale(v, c));
             }
         }
-        Collections.shuffle(pioche);
+        //Collections.shuffle(pioche);
     }
 
     public Carte piocher() {

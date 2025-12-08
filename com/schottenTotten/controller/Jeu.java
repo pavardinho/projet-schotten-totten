@@ -1,5 +1,7 @@
 package com.schottenTotten.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import com.schottenTotten.model.*;
@@ -54,9 +56,50 @@ public class Jeu {
         }
 
         Borne b = plateau.getBornes().get(e-1);
-
         jouerCarte(j, c, b);
-        j.recevoirCarte(plateau.piocher());
+
+        // On regarde si on peut reclamer des bornes 
+
+        List<Borne> bornes_reclamable = new ArrayList<Borne>();
+
+        for (Borne borne : plateau.getBornes()) {
+            if (mode.peutReclamerBorne(borne.getCartesJoueur(j), borne.getCartesAutreJoueur(j), borne)) {
+                bornes_reclamable.add(borne);
+            }
+        }
+
+        if (bornes_reclamable.size() > 0) {
+            System.out.println("Tu peux réclamer les bornes suivantes : ");
+            for (Borne borne : bornes_reclamable) {
+                System.out.println(borne.getNumero());
+            }
+            System.out.println("Veux-tu en réclamer une ? ('N' si tu ne veux pas/plus en réclamer sinon entre le numéro de la borne que tu veux réclamer)");
+            String s = sc.next();
+            while (!s.equals("N")) {
+
+                int num = Integer.parseInt(s);
+                boolean peutChoisir = false;
+                for (Borne borne : bornes_reclamable) {
+                    if (borne.getNumero() == num) {
+                        peutChoisir = true;
+                        borne.reclamerBorne(j);
+                        System.out.println("Borne revendiquée ! Veux tu en revendiquer d'autre ?");
+                    }
+                }
+                if (!peutChoisir) {
+                    System.out.println("Tu ne peux pas choisir cette Borne");
+                }
+                s = sc.next();
+            }
+        }
+
+        if (plateau.getNbCartesPioche() > 0) {
+            j.recevoirCarte(plateau.piocher());
+        }
+    }
+
+    public boolean estTerminee(){
+        return false;
     }
 
     public void boucleJeu(Scanner sc){
@@ -65,11 +108,14 @@ public class Jeu {
         
         boolean finJeu = false;
         while (!finJeu) {
-            vue.afficherPlateau(plateau, mode);
             Joueur j = getJoueur(indexJoueurCourant);
+
+            vue.afficherPlateau(plateau, mode);
             vue.afficherMain(j.getNom(), j.getMain());
+            
             joueTour(sc, j);
 
+            // vérifier si le joueur gagne
 
             indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
         }

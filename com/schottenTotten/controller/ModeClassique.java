@@ -1,5 +1,7 @@
 package com.schottenTotten.controller;
 
+import java.util.List;
+
 import com.schottenTotten.model.*;
 
 public class ModeClassique implements ModeDeJeu{
@@ -31,8 +33,25 @@ public class ModeClassique implements ModeDeJeu{
     }
 
 
-    public boolean peutReclamerBorne(Joueur j, Borne b, Plateau p){
-        return false;
+    public boolean peutReclamerBorne(List<Carte> cj_reclame, List<Carte> cj_autre, Borne b){
+        
+        if (b.getStatut() != Borne.Statut.NON_RECLAMEE || cj_reclame.size() != 3 || cj_autre.size() != 3) {
+            return false;
+        }
+
+        Combinaison combj_reclame = new Combinaison(cj_reclame);
+        Combinaison combj_autre = new Combinaison(cj_autre);
+
+        int compare = Combinaison.compareCombinaison(combj_reclame, combj_autre);
+        
+        if (compare > 0) {
+            return true;
+        } else if (compare < 0){
+            return false;
+        } else {
+            // gerer le cas ou le type et la somme des valeurs et la même -> regardé qui a posé la 3eme carte en premier
+            return false;
+        }
     }
 
     public boolean peutJouerCarteTactique(CarteTactique c, Joueur j, Plateau p){

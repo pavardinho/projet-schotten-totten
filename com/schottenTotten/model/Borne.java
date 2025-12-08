@@ -72,4 +72,23 @@ public class Borne {
         }
         return new ArrayList<>();
     }
+
+    public List<Carte> getCartesAutreJoueur(Joueur j){
+        if ( j == this.joueur1 ){
+            return this.cartesJoueur2;
+        }
+        else if ( j == this.joueur2 ){
+            return this.cartesJoueur1;
+        }
+        return new ArrayList<>();
+    }
+
+    public void reclamerBorne(Joueur j){
+        if ( j == this.joueur1 ){
+            this.statut = Statut.RECLAMEE_J1;
+        }
+        else if ( j == this.joueur2 ){
+            this.statut = Statut.RECLAMEE_J2;
+        }
+    }
 }
