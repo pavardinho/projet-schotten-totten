@@ -62,6 +62,15 @@ public class Borne {
         return false;
     }
 
+    public boolean estControleeParJoueur(Joueur j){
+        if ( j == this.joueur1 ){
+            return this.statut == Statut.RECLAMEE_J1;
+        }
+        else {
+            return this.statut == Statut.RECLAMEE_J2;
+        }
+    }
+
     // Permet à l'ia de récupérer les cartes jqu'elle a jouées sur une borne
     public List<Carte> getCartesJoueur(Joueur j){
         if ( j == this.joueur1 ){

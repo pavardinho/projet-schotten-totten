@@ -10,6 +10,7 @@ public class Joueur {
     private String nom;
     private List<Carte> main;
     private Strategie strategie;
+    private int nbBornesControllees;
 
     public String getNom () { return this.nom; }
     public List<Carte> getMain() { return this.main; }
@@ -19,7 +20,11 @@ public class Joueur {
         this.nom = nom;
         this.main = new ArrayList<>();
         this.strategie = strategie;
+        this.nbBornesControllees = 0;
     }
+
+    public void addNbBornesControllees() { this.nbBornesControllees += 1; }
+    public int getNbBornesControllees() { return this.nbBornesControllees; }
 
     public void recevoirCarte(Carte carte) { /// FONCITON POUR RECEVOIR UNE CARTE (A METTRE EN COMMUN AVEC LE CODE DANS CONTROLLER.JAVA)
         this.main.add(carte);
