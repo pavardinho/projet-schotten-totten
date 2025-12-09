@@ -11,5 +11,7 @@ public interface Vue {
     public void afficherMain(String joueurName, List<Carte> main);
 
     public void afficherParamètres(Jeu j);
+    public void afficherChoixModeDeJeux(ModeDeJeu m);
+    public void afficherChoixJoueur(Joueur j);
 
 }

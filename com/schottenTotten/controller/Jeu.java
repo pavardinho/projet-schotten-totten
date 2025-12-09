@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.schottenTotten.ai.Aleatoire;
+import com.schottenTotten.ai.Strategie;
 import com.schottenTotten.model.*;
 import com.schottenTotten.view.*;
 
@@ -99,33 +101,13 @@ public class Jeu {
         }
     }
 
-    public void joueTourIA(Scanner sc, Joueur j) {
-        System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
-        int e = sc.nextInt();
-        while (!(0 < e && e <= mode.getNbCarteMain())) {
-            System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
-            e = sc.nextInt();
-        }
-
-        Carte c = j.getMain().get(e-1);
-
-        System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
-        e = sc.nextInt();
-        while (!(0 < e && e <= mode.getNbBornes())) {
-            System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
-            e = sc.nextInt();
-        }
-
-        while (plateau.getBornes().get(e-1).estPleine(j) || !(0 < e && e <= mode.getNbBornes())) {
-            System.out.println("La borne choisit est déja remplie, choisissez-en une autre (1-"+mode.getNbBornes()+") : ");
-            e = sc.nextInt();
-        }
-
-        Borne b = plateau.getBornes().get(e-1);
-        jouerCarte(j, c, b);
+    public void joueTourIA(Joueur j) {
+        
+        Strategie s = j.getStrategie();
+        Action a = s.choisirAction(this, j);
+        jouerCarte(j, a.getCarte(), a.getBorne());
 
         // On regarde si on peut reclamer des bornes 
-
         List<Borne> bornes_reclamable = new ArrayList<Borne>();
 
         for (Borne borne : plateau.getBornes()) {
@@ -134,30 +116,9 @@ public class Jeu {
             }
         }
 
-        if (bornes_reclamable.size() > 0) {
-            System.out.println("Tu peux réclamer les bornes suivantes : ");
-            for (Borne borne : bornes_reclamable) {
-                System.out.println(borne.getNumero());
-            }
-            System.out.println("Veux-tu en réclamer une ? ('N' si tu ne veux pas/plus en réclamer sinon entre le numéro de la borne que tu veux réclamer)");
-            String s = sc.next();
-            while (!s.equals("N")) {
-
-                int num = Integer.parseInt(s);
-                boolean peutChoisir = false;
-                for (Borne borne : bornes_reclamable) {
-                    if (borne.getNumero() == num) {
-                        peutChoisir = true;
-                        borne.reclamerBorne(j);
-                        j.addNbBornesControllees();
-                        System.out.println("Borne revendiquée ! Veux tu en revendiquer d'autre ?");
-                    }
-                }
-                if (!peutChoisir) {
-                    System.out.println("Tu ne peux pas choisir cette Borne");
-                }
-                s = sc.next();
-            }
+        for (Borne borne : bornes_reclamable) {
+            borne.reclamerBorne(j);
+            j.addNbBornesControllees();
         }
 
         if (plateau.getNbCartesPioche() > 0) {
@@ -205,8 +166,40 @@ public class Jeu {
             if (!finJeu) {
                 indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
             }
+            else{
+                System.out.println(j.getNom()+" a gagner !");
+            }
         }
-        System.out.println("Le joueur "+(indexJoueurCourant+1)+" a gagner !");
+    }
+
+    public void boucleChoixModeDeJeu(Scanner sc){
+        boolean finParam = false;
+        while (!finParam) {
+            vue.afficherChoixModeDeJeux(this.mode);
+            String e = sc.nextLine();
+
+            if (e.equals("M")) {
+            } else if (e.equals("1")){
+            } else if (e.equals("2")){
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
+        }
+    }
+
+    public void boucleChoixJoueur(Scanner sc, Joueur j){
+        boolean finParam = false;
+        while (!finParam) {
+            vue.afficherChoixJoueur(j);
+            String e = sc.nextLine();
+
+            if (e.equals("M")) {
+            } else if (e.equals("1")){
+            } else if (e.equals("2")){
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
+        }
     }
 
     public void boucleParametres(Scanner sc){
@@ -214,6 +207,16 @@ public class Jeu {
         while (!finParam) {
             vue.afficherParamètres(this);
             String e = sc.nextLine();
+
+            if (e.equals("M")) {
+                boucleChoixModeDeJeu(sc);
+            } else if (e.equals("1")){
+                boucleChoixJoueur(sc);
+            } else if (e.equals("2")){
+                boucleChoixJouer()
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
         }
     }
 
@@ -239,9 +242,11 @@ public class Jeu {
     public Jeu() {
         this.mode = new ModeClassique();
         this.joueurs = new Joueur[this.nbJoueurs];
-        for (int i = 0; i < joueurs.length; i++) {
+        /*for (int i = 0; i < joueurs.length; i++) {
            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
-        }
+        }*/
+        this.joueurs[0] = new Joueur("Joueur 1", null);
+        this.joueurs[1] = new Joueur("Joueur IA", new Aleatoire());
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();

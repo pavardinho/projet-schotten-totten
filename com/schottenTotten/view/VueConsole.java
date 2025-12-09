@@ -79,6 +79,14 @@ public class VueConsole implements Vue {
         System.out.println("[ ] Que voulez-vous faire ?");
     }
 
+    public void afficherChoixModeDeJeux(ModeDeJeu m){
+
+    }
+
+    public void afficherChoixJoueur(Joueur j){
+        
+    }
+
     public void afficherMain(String joueurName, List<Carte> main){
         System.out.println("A ton tour "+joueurName+", voici ta main :");
         for (int i = 0; i < main.size(); i++) {
