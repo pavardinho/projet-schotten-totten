@@ -7,6 +7,16 @@ import com.schottenTotten.controller.*;
 
 public class VueConsole implements Vue {
 
+    // Codes Couleurs ANSI
+    private static final String RESET = "\u001B[0m";
+    private static final String ROUGE = "\u001B[31m";
+    private static final String VERT = "\u001B[32m";
+    private static final String JAUNE = "\u001B[33m";
+    private static final String BLEU = "\u001B[34m";
+    private static final String VIOLET = "\u001B[35m";
+    private static final String ORANGE = "\u001B[38;5;208m"; 
+    private static final String GRIS = "\u001B[90m"; 
+
     private static final String MARGE = "      ";
 
     private static final int LARGEUR_CARTE = 15;
@@ -27,7 +37,7 @@ public class VueConsole implements Vue {
         int cartesMax = mode.getCartesMaxParBornes();
         int largeurZone = cartesMax * LARGEUR_CARTE;
 
-        System.out.printf(MARGE + "%45s     %s     %-45s%n", "Joueur 1", "BORNES", "Joueur 2");
+        System.out.printf(MARGE + "%" + (largeurZone - 1) + "s   %s   %-" + largeurZone + "s%n", "Joueur 1", "BORNES", "Joueur 2");
         System.out.println("");
 
         List<Borne> bs = p.getBornes();
@@ -78,21 +88,69 @@ public class VueConsole implements Vue {
     }
 
     private String formaterCarte(Carte c, boolean alignerDroite) {
-        if (c == null) return String.format("%" + LARGEUR_CARTE + "s", "");
+        if (c == null) {
+            return String.format("%" + LARGEUR_CARTE + "s", "");
+        } 
 
-        String nom = c.getNom();
+        String[] infos = analyserCarte(c.getNom());
+        String numero = infos[0];
+        String codeCouleur = infos[1];
+
+        String contenuVisible = "[" + numero + "]";
         
-        String rendu = "[" + nom + "]";
+        String contenuColore = "[" + codeCouleur + numero + RESET + "]";
+
+        int nbEspaces = LARGEUR_CARTE - contenuVisible.length();
+        if (nbEspaces < 0) nbEspaces = 0;
         
-        if (rendu.length() > LARGEUR_CARTE) {
-            return rendu.substring(0, LARGEUR_CARTE);
+        StringBuilder espaces = new StringBuilder();
+        for (int i = 0; i < nbEspaces; i++) {
+            espaces.append(" ");
         }
-        
+
         if (alignerDroite) {
-            return String.format("%" + LARGEUR_CARTE + "s", rendu);
+            return espaces.toString() + contenuColore;
         } else {
-            return String.format("%-" + LARGEUR_CARTE + "s", rendu);
+            return contenuColore + espaces.toString();
         }
+    }
+
+    private String[] analyserCarte(String nomBrut) {
+        String numero = "?";
+        String couleur = RESET;
+
+        if (nomBrut == null || !nomBrut.contains("_")) {
+            return new String[]{nomBrut, RESET};
+        }
+
+        String[] parts = nomBrut.split("_");
+        String valStr = parts[0];
+        String coulStr = parts[1];
+
+        switch (valStr) {
+            case "UN": numero = "1"; break;
+            case "DEUX": numero = "2"; break;
+            case "TROIS": numero = "3"; break;
+            case "QUATRE": numero = "4"; break;
+            case "CINQ": numero = "5"; break;
+            case "SIX": numero = "6"; break;
+            case "SEPT": numero = "7"; break;
+            case "HUIT": numero = "8"; break;
+            case "NEUF": numero = "9"; break;
+            default: numero = valStr.substring(0, 1);
+        }
+
+        switch (coulStr) {
+            case "VERT": couleur = VERT; break;
+            case "ROUGE": couleur = ROUGE; break;
+            case "JAUNE": couleur = JAUNE; break;
+            case "BLEU": couleur = BLEU; break;
+            case "VIOLET": couleur = VIOLET; break;
+            case "MARRON": couleur = ORANGE; break; 
+            default: couleur = GRIS; break;
+        }
+
+        return new String[]{numero, couleur};
     }
 
     public void afficherParamètres(Jeu j){
@@ -117,11 +175,13 @@ public class VueConsole implements Vue {
 
     public void afficherMain(String joueurName, List<Carte> main){
         System.out.println("\n" + MARGE + "--- Main de " + joueurName + " ---");
+        System.out.print("\n");
         System.out.print(MARGE); // Décalage de la main
         for (int i = 0; i < main.size(); i++) {
-            System.out.print(String.format("[%d] %-15s  ", (i+1), main.get(i).getNom()));
-            if ((i + 1) % 3 == 0) System.out.print("\n" + MARGE);
+            Carte c = main.get(i);
+            System.out.print(String.format(" %s  ", formaterCarte(c, false)));
         }
+        System.out.print("\n");
         System.out.println();
     }
 }
