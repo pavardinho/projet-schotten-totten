@@ -78,7 +78,7 @@ public class VueConsole implements Vue {
                 sb2.append(formaterCarte(c, false));
             }
 
-            for (int i = 0; i < cartesMax - l2.size(); i++) {
+            for (int i = 0; i < cartesMax - nbCartel2; i++) {
                 sb2.append(String.format("%-" + LARGEUR_CARTE + "s", ""));
             }
             
