@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.schottenTotten.ai.Aleatoire;
+import com.schottenTotten.ai.Strategie;
 import com.schottenTotten.model.*;
 import com.schottenTotten.view.*;
 
@@ -83,6 +85,7 @@ public class Jeu {
                     if (borne.getNumero() == num) {
                         peutChoisir = true;
                         borne.reclamerBorne(j);
+                        j.addNbBornesControllees();
                         System.out.println("Borne revendiquée ! Veux tu en revendiquer d'autre ?");
                     }
                 }
@@ -98,7 +101,46 @@ public class Jeu {
         }
     }
 
-    public boolean estTerminee(){
+    public void joueTourIA(Joueur j) {
+        
+        Strategie s = j.getStrategie();
+        Action a = s.choisirAction(this, j);
+        jouerCarte(j, a.getCarte(), a.getBorne());
+
+        // On regarde si on peut reclamer des bornes 
+        List<Borne> bornes_reclamable = new ArrayList<Borne>();
+
+        for (Borne borne : plateau.getBornes()) {
+            if (mode.peutReclamerBorne(borne.getCartesJoueur(j), borne.getCartesAutreJoueur(j), borne)) {
+                bornes_reclamable.add(borne);
+            }
+        }
+
+        for (Borne borne : bornes_reclamable) {
+            borne.reclamerBorne(j);
+            j.addNbBornesControllees();
+        }
+
+        if (plateau.getNbCartesPioche() > 0) {
+            j.recevoirCarte(plateau.piocher());
+        }
+    }
+
+    public boolean estTerminee(Joueur j, Plateau p){
+
+        if (j.getNbBornesControllees() == 5) {
+            return true;
+        }
+        else {
+            List<Borne> bornes = p.getBornes();
+
+            for (int i = 0; i < bornes.size() - 2; i++) {
+                if (bornes.get(i).estControleeParJoueur(j) && bornes.get(i+1).estControleeParJoueur(j) && bornes.get(i+2).estControleeParJoueur(j)) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -110,14 +152,53 @@ public class Jeu {
         while (!finJeu) {
             Joueur j = getJoueur(indexJoueurCourant);
 
-            vue.afficherPlateau(plateau, mode);
-            vue.afficherMain(j.getNom(), j.getMain());
-            
-            joueTour(sc, j);
+            if (j.isAI()){
+                joueTourIA(j);
+            } else {
+                vue.afficherPlateau(plateau, mode);
+                vue.afficherMain(j.getNom(), j.getMain());
+                
+                joueTour(sc, j);
+            }
 
-            // vérifier si le joueur gagne
+            finJeu = estTerminee(j, plateau);
 
-            indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
+            if (!finJeu) {
+                indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
+            }
+            else{
+                System.out.println(j.getNom()+" a gagner !");
+            }
+        }
+    }
+
+    public void boucleChoixModeDeJeu(Scanner sc){
+        boolean finParam = false;
+        while (!finParam) {
+            vue.afficherChoixModeDeJeux(this.mode);
+            String e = sc.nextLine();
+
+            if (e.equals("M")) {
+            } else if (e.equals("1")){
+            } else if (e.equals("2")){
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
+        }
+    }
+
+    public void boucleChoixJoueur(Scanner sc, Joueur j){
+        boolean finParam = false;
+        while (!finParam) {
+            vue.afficherChoixJoueur(j);
+            String e = sc.nextLine();
+
+            if (e.equals("M")) {
+            } else if (e.equals("1")){
+            } else if (e.equals("2")){
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
         }
     }
 
@@ -126,6 +207,16 @@ public class Jeu {
         while (!finParam) {
             vue.afficherParamètres(this);
             String e = sc.nextLine();
+
+            if (e.equals("M")) {
+                boucleChoixModeDeJeu(sc);
+            } else if (e.equals("1")){
+                boucleChoixJoueur(sc);
+            } else if (e.equals("2")){
+                boucleChoixJouer()
+            } else if (e.equals("Q")){
+                finParam = true;
+            }
         }
     }
 
@@ -151,9 +242,11 @@ public class Jeu {
     public Jeu() {
         this.mode = new ModeClassique();
         this.joueurs = new Joueur[this.nbJoueurs];
-        for (int i = 0; i < joueurs.length; i++) {
+        /*for (int i = 0; i < joueurs.length; i++) {
            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
-        }
+        }*/
+        this.joueurs[0] = new Joueur("Joueur 1", null);
+        this.joueurs[1] = new Joueur("Joueur IA", new Aleatoire());
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();

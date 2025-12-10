@@ -107,6 +107,14 @@ public class VueConsole implements Vue {
         System.out.println(MARGE + "[ ] Que voulez-vous faire ?");
     }
 
+    public void afficherChoixModeDeJeux(ModeDeJeu m){
+
+    }
+
+    public void afficherChoixJoueur(Joueur j){
+        
+    }
+
     public void afficherMain(String joueurName, List<Carte> main){
         System.out.println("\n" + MARGE + "--- Main de " + joueurName + " ---");
         System.out.print(MARGE); // Décalage de la main
