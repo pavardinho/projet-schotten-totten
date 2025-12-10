@@ -16,6 +16,12 @@ public class Joueur {
     public List<Carte> getMain() { return this.main; }
     public Strategie getStrategie() { return this.strategie; }
 
+    public void setNom(String s) { this.nom = s; }
+    public void setStrategie(Strategie s) { this.strategie = s; }
+
+    public void resetMain() { this.main = new ArrayList<>(); }
+    public void resetNbBornesControllees() { this.nbBornesControllees = 0; }
+
     public Joueur(String nom, Strategie strategie){
         this.nom = nom;
         this.main = new ArrayList<>();

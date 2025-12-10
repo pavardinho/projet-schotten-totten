@@ -26,7 +26,7 @@ public class Plateau {
                 pioche.add(new CarteNormale(v, c));
             }
         }
-        //Collections.shuffle(pioche);
+        Collections.shuffle(pioche);
     }
 
     public Carte piocher() {

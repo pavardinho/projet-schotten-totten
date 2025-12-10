@@ -13,8 +13,11 @@ import java.util.ArrayList;
 public class Aleatoire implements Strategie {
     // Cette première stratégie d'ia selectionne une carte au hasard parmi les cartes jouables
 
+    private String name;
     private Random random = new Random();
 
+    public String getName() { return this.name; }
+    
     public Action choisirAction(Jeu jeu, Joueur joueur) {
 
         // On choisit d'abord un carte
@@ -47,5 +50,9 @@ public class Aleatoire implements Strategie {
         Borne borne_choisie = bornes_jouables.get(id_Borne);
 
         return new Action(carte_choisie, borne_choisie);
+    }
+
+    public Aleatoire() {
+        this.name = "Aleatoire";
     }
 }

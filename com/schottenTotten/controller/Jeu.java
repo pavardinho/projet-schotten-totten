@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.schottenTotten.ai.Aleatoire;
+import com.schottenTotten.ai.Combine;
 import com.schottenTotten.ai.Strategie;
 import com.schottenTotten.model.*;
 import com.schottenTotten.view.*;
@@ -167,6 +168,7 @@ public class Jeu {
                 indexJoueurCourant = (indexJoueurCourant + 1) % nbJoueurs;
             }
             else{
+                vue.afficherPlateau(plateau, mode);
                 System.out.println(j.getNom()+" a gagner !");
             }
         }
@@ -178,25 +180,32 @@ public class Jeu {
             vue.afficherChoixModeDeJeux(this.mode);
             String e = sc.nextLine();
 
-            if (e.equals("M")) {
-            } else if (e.equals("1")){
-            } else if (e.equals("2")){
-            } else if (e.equals("Q")){
+            if (e.equals("C")) {
+                mode = new ModeClassique();
+            } else if (e.equals("T")){
+                mode = new ModeTactique();
+            } else if (e.equals("R")){
                 finParam = true;
             }
         }
     }
 
-    public void boucleChoixJoueur(Scanner sc, Joueur j){
+    public void boucleChoixJoueur(Scanner sc, Joueur j, int i){
         boolean finParam = false;
         while (!finParam) {
-            vue.afficherChoixJoueur(j);
+            vue.afficherChoixJoueur(j, i);
             String e = sc.nextLine();
 
-            if (e.equals("M")) {
-            } else if (e.equals("1")){
-            } else if (e.equals("2")){
-            } else if (e.equals("Q")){
+            if (e.equals("N")) {
+                System.out.println("Entrez le pseudo : ");
+                j.setNom(sc.nextLine());
+            } else if (e.equals("S")){
+                j.setStrategie(null);
+            } else if (e.equals("A")){
+                j.setStrategie(new Aleatoire());
+            } else if (e.equals("C")){
+                j.setStrategie(new Combine());
+            } else if (e.equals("R")){
                 finParam = true;
             }
         }
@@ -211,9 +220,9 @@ public class Jeu {
             if (e.equals("M")) {
                 boucleChoixModeDeJeu(sc);
             } else if (e.equals("1")){
-                boucleChoixJoueur(sc);
+                boucleChoixJoueur(sc, this.joueurs[0], 1);
             } else if (e.equals("2")){
-                boucleChoixJouer()
+                boucleChoixJoueur(sc, this.joueurs[1], 2);
             } else if (e.equals("Q")){
                 finParam = true;
             }
@@ -245,8 +254,8 @@ public class Jeu {
         /*for (int i = 0; i < joueurs.length; i++) {
            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
         }*/
-        this.joueurs[0] = new Joueur("Joueur 1", null);
-        this.joueurs[1] = new Joueur("Joueur IA", new Aleatoire());
+        this.joueurs[0] = new Joueur("T", new Combine());
+        this.joueurs[1] = new Joueur("CACA", new Combine());
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();

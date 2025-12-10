@@ -12,6 +12,6 @@ public interface Vue {
 
     public void afficherParamètres(Jeu j);
     public void afficherChoixModeDeJeux(ModeDeJeu m);
-    public void afficherChoixJoueur(Joueur j);
+    public void afficherChoixJoueur(Joueur j, int i);
 
 }

@@ -20,9 +20,14 @@ public class ModeClassique implements ModeDeJeu{
     public void setNbCarteMain(int nb) { this.nbCarteMain = nb; }
 
     public void initialiserJeu(Jeu j){
-        Plateau p = j.getPlateau();
+        j.setIndexJoueurCourant(0);
+        
+        Plateau p = new Plateau(nbBornes);
+        j.setPlateau(p);
         for (int i = 0; i < j.getNbJoueurs(); i++) {
             Joueur joueur = j.getJoueur(i);
+            joueur.resetMain();
+            joueur.resetNbBornesControllees();
             for (int k = 0; k < nbCarteMain; k++) {
                 joueur.recevoirCarte(p.piocher());
             }
@@ -50,7 +55,7 @@ public class ModeClassique implements ModeDeJeu{
             return false;
         } else {
             // gerer le cas ou le type et la somme des valeurs et la même -> regardé qui a posé la 3eme carte en premier
-            return false;
+            return true;
         }
     }
 

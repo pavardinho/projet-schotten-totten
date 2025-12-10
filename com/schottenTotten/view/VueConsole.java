@@ -80,11 +80,28 @@ public class VueConsole implements Vue {
     }
 
     public void afficherChoixModeDeJeux(ModeDeJeu m){
-
+        System.out.println("#####  MODE DE JEU #####");
+        System.out.println("[C] Classique");
+        System.out.println("[T] Tactique");
+        System.out.println("[R] Retour");
+        System.out.println("[ ] Que voulez-vous faire ?");
     }
 
-    public void afficherChoixJoueur(Joueur j){
-        
+    public void afficherChoixJoueur(Joueur j, int i){
+        System.out.println("#####  Joueur "+i+" #####");
+        System.out.println("[N] Nom : "+j.getNom());
+        String afficheStrategie = "";
+        if (j.isAI()) {
+            afficheStrategie = j.getStrategie().getName();
+        } else {
+            afficheStrategie = "Aucune";
+        }
+        System.out.println("[ ] Strategie : "+afficheStrategie);
+        System.out.println("    [S] Aucune (joueur humain)");
+        System.out.println("    [A] Aleatoire");
+        System.out.println("    [C] Combine");
+        System.out.println("[R] Retour");
+        System.out.println("[ ] Que voulez-vous faire ?");
     }
 
     public void afficherMain(String joueurName, List<Carte> main){

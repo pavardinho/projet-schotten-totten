@@ -8,19 +8,22 @@ import com.schottenTotten.model.Carte;
 import com.schottenTotten.model.CarteNormale;
 
 import java.util.List;
-import java.util.Random;
-import java.util.ArrayList;
 
 public class Combine implements Strategie {
 
-    @Override
+    public String name;
 
+    public String getName() { return name; }
+
+    @Override
     public Action choisirAction(Jeu jeu, Joueur joueur) {
         List<Carte> main = joueur.getMain();
         List<Borne> bornes = jeu.getPlateau().getBornes();
 
         Action meilleurCoup = null;
         int meilleurscore = -1000;
+
+        System.out.println("Taille main : "+ main.size());
 
         for (Carte c : main) {
 
@@ -75,5 +78,9 @@ public class Combine implements Strategie {
             }
         }
         return score;
+    }
+
+    public Combine() {
+        this.name = "Combine";
     }
 }

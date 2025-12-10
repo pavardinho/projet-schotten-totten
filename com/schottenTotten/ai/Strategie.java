@@ -6,6 +6,8 @@ import com.schottenTotten.controller.Jeu;
 
 public interface Strategie {
 
+    public String getName();
+
     Action choisirAction(Jeu jeu, Joueur joueur);
     
 } 
