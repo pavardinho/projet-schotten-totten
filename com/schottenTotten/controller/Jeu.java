@@ -37,66 +37,80 @@ public class Jeu {
     }
 
     public void joueTour(Scanner sc, Joueur j) {
-        System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
-        int e = sc.nextInt();
-        while (!(0 < e && e <= mode.getNbCarteMain())) {
-            System.out.println("Entrez le numéro de la carte que vous voulez jouez (1-"+mode.getNbCarteMain()+") : ");
-            e = sc.nextInt();
+        int indexCarte = lireEntier(sc, 1, mode.getNbCarteMain(), 
+            "Entrez le numéro de la carte que vous voulez jouer (1-" + mode.getNbCarteMain() + ") : ");
+    
+        Carte c = j.getMain().get(indexCarte - 1);
+    
+        boolean borneValide = false;
+        int indexBorne = -1;
+    
+        while (!borneValide) {
+            indexBorne = lireEntier(sc, 1, mode.getNbBornes(), 
+                "Entrez le numéro de la borne où vous voulez placer la carte (1-" + mode.getNbBornes() + ") : ");
+    
+            if (plateau.getBornes().get(indexBorne - 1).estPleine(j)) {
+                System.out.println("Attention : La borne " + indexBorne + " est déjà pleine pour vous ! Choisissez-en une autre.");
+            } else {
+                borneValide = true;
+            }
         }
-
-        Carte c = j.getMain().get(e-1);
-
-        System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
-        e = sc.nextInt();
-        while (!(0 < e && e <= mode.getNbBornes())) {
-            System.out.println("Entrez le numéro de la borne où vous voulez placez la carte (1-"+mode.getNbBornes()+") : ");
-            e = sc.nextInt();
-        }
-
-        while (plateau.getBornes().get(e-1).estPleine(j) || !(0 < e && e <= mode.getNbBornes())) {
-            System.out.println("La borne choisit est déja remplie, choisissez-en une autre (1-"+mode.getNbBornes()+") : ");
-            e = sc.nextInt();
-        }
-
-        Borne b = plateau.getBornes().get(e-1);
+    
+        Borne b = plateau.getBornes().get(indexBorne - 1);
         jouerCarte(j, c, b);
 
-        // On regarde si on peut reclamer des bornes 
-
         List<Borne> bornes_reclamable = new ArrayList<Borne>();
-
         for (Borne borne : plateau.getBornes()) {
             if (mode.peutReclamerBorne(borne.getCartesJoueur(j), borne.getCartesAutreJoueur(j), borne)) {
                 bornes_reclamable.add(borne);
             }
         }
-
+    
         if (bornes_reclamable.size() > 0) {
             System.out.println("Tu peux réclamer les bornes suivantes : ");
             for (Borne borne : bornes_reclamable) {
-                System.out.println(borne.getNumero());
+                System.out.println("- Borne n°" + borne.getNumero());
             }
-            System.out.println("Veux-tu en réclamer une ? ('N' si tu ne veux pas/plus en réclamer sinon entre le numéro de la borne que tu veux réclamer)");
-            String s = sc.next();
-            while (!s.equals("N")) {
-
-                int num = Integer.parseInt(s);
-                boolean peutChoisir = false;
-                for (Borne borne : bornes_reclamable) {
-                    if (borne.getNumero() == num) {
-                        peutChoisir = true;
-                        borne.reclamerBorne(j);
-                        j.addNbBornesControllees();
-                        System.out.println("Borne revendiquée ! Veux tu en revendiquer d'autre ?");
+    
+            boolean finReclamation = false;
+            while (!finReclamation) {
+                System.out.println("Veux-tu en réclamer une ? ('N' pour non, ou le numéro de la borne)");
+                String s = sc.next();
+                
+                if (s.equalsIgnoreCase("N")) {
+                    finReclamation = true;
+                } else {
+                    try {
+                        int num = Integer.parseInt(s);
+                        boolean peutChoisir = false;
+                        
+                        // On vérifie si ce numéro fait partie des bornes réclamables
+                        for (int i = 0; i < bornes_reclamable.size(); i++) {
+                            Borne borne = bornes_reclamable.get(i);
+                            if (borne.getNumero() == num) {
+                                peutChoisir = true;
+                                borne.reclamerBorne(j);
+                                j.addNbBornesControllees();
+                                bornes_reclamable.remove(i); 
+                                System.out.println("Borne " + num + " revendiquée avec succès !");
+                                break;
+                            }
+                        }
+                        
+                        if (!peutChoisir) {
+                            System.out.println("Erreur : Tu ne peux pas réclamer la borne " + num + " (soit elle n'existe pas, soit elle n'est pas gagnée).");
+                        } else if (bornes_reclamable.isEmpty()) {
+                             System.out.println("Il n'y a plus de bornes à réclamer pour ce tour.");
+                             finReclamation = true;
+                        }
+    
+                    } catch (NumberFormatException e) {
+                        System.out.println("Erreur : Entrée invalide. Tapez un numéro ou 'N'.");
                     }
                 }
-                if (!peutChoisir) {
-                    System.out.println("Tu ne peux pas choisir cette Borne");
-                }
-                s = sc.next();
             }
         }
-
+    
         if (plateau.getNbCartesPioche() > 0) {
             j.recevoirCarte(plateau.piocher());
         }
@@ -251,11 +265,11 @@ public class Jeu {
     public Jeu() {
         this.mode = new ModeClassique();
         this.joueurs = new Joueur[this.nbJoueurs];
-        /*for (int i = 0; i < joueurs.length; i++) {
+        for (int i = 0; i < joueurs.length; i++) {
            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
-        }*/
-        this.joueurs[0] = new Joueur("T", new Combine());
-        this.joueurs[1] = new Joueur("CACA", new Combine());
+        }
+        /*this.joueurs[0] = new Joueur("T", new Combine());
+        this.joueurs[1] = new Joueur("CACA", new Combine());*/
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();
@@ -264,5 +278,29 @@ public class Jeu {
     public static void main(String[] args) {
         Jeu jeu = new Jeu();
         jeu.bouclePrincipale();
+    }
+
+    private int lireEntier(Scanner sc, int min, int max, String message) {
+        int valeur = -1;
+        boolean saisieValide = false;
+        
+        while(!saisieValide){
+            System.out.print(message);
+            if (sc.hasNextInt()) {
+                valeur = sc.nextInt();
+                sc.nextLine();
+                if (valeur >= min && valeur <= max) {
+                    saisieValide = true;
+                } else {
+                    System.out.println("Veuillez entrer un entier entre " + min + " et " + max + ".");
+                }
+            } else {
+                String invalidInput = sc.next(); 
+                sc.nextLine();
+                System.out.println("Entrée invalide : " + invalidInput + ". Veuillez entrer un entier.");
+
+            }
+        }
+        return valeur;
     }
 }

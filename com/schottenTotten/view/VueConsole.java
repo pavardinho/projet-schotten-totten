@@ -159,7 +159,7 @@ public class VueConsole implements Vue {
         for (int i = 0; i < j.getNbJoueurs(); i++) {
             Joueur joueur = j.getJoueur(i);
             String type = joueur.isAI() ? "(IA)" : "(Humain)";
-            System.out.println(MARGE + "Joueur " + (i+1) + " : " + joueur.getNom() + " " + type);
+            System.out.println(MARGE + "["+ (i+1) + "]: Joueur " + (i+1) + " : " + joueur.getNom() + " " + type);
         }
         System.out.println(MARGE + "[Q] Quitter");
         System.out.println(MARGE + "[ ] Que voulez-vous faire ?");
