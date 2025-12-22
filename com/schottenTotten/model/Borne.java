@@ -3,6 +3,8 @@ package com.schottenTotten.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.schottenTotten.model.CarteTactique.TypeTactique;
+
 
 public class Borne {
     public enum Statut { NON_RECLAMEE, RECLAMEE_J1, RECLAMEE_J2 };
@@ -11,6 +13,7 @@ public class Borne {
     private List<Carte> cartesJoueur1;
     private List<Carte> cartesJoueur2;
     private Statut statut;
+    private CarteTactique carteTactique;
 
     private Joueur joueur1;
     private Joueur joueur2;
@@ -19,13 +22,16 @@ public class Borne {
     public List<Carte> getCarteJoueur1() { return this.cartesJoueur1; }
     public List<Carte> getCarteJoueur2() { return this.cartesJoueur2; }
     public Statut getStatut() { return this.statut; }
+    public CarteTactique getCarteTactique() { return this.carteTactique; }
 
+    public void setCarteTactique(CarteTactique cTactique) { this.carteTactique = cTactique;}
 
     public Borne(int numero){
         this.numero = numero;
         this.cartesJoueur1 = new ArrayList<Carte>();
         this.cartesJoueur2 = new ArrayList<Carte>();
         this.statut = Statut.NON_RECLAMEE;
+        this.carteTactique = null;
     }
 
     public void setJoueurs(Joueur j1, Joueur j2){
@@ -43,12 +49,20 @@ public class Borne {
 
     public boolean estPleine(Joueur j){
         if ( j == this.joueur1 ){
-            if (this.cartesJoueur1.size() >= 3){
+            if (carteTactique != null && carteTactique.getTypeTactique() == TypeTactique.COMBATDEBOUE){
+                if (this.cartesJoueur1.size() >= 4) {
+                    return true;
+                }
+            } else if (this.cartesJoueur1.size() >= 3){
                 return true;
             }
         }
         else if ( j == this.joueur2 ){
-            if (this.cartesJoueur2.size() >= 3){
+            if (carteTactique != null && carteTactique.getTypeTactique() == TypeTactique.COMBATDEBOUE){
+                if (this.cartesJoueur2.size() >= 4) {
+                    return true;
+                }
+            } else if (this.cartesJoueur2.size() >= 3){
                 return true;
             }
         }

@@ -14,8 +14,9 @@ public class VueConsole implements Vue {
     private static final String JAUNE = "\u001B[33m";
     private static final String BLEU = "\u001B[34m";
     private static final String VIOLET = "\u001B[35m";
-    private static final String ORANGE = "\u001B[38;5;208m"; 
-    private static final String GRIS = "\u001B[90m"; 
+    private static final String ORANGE = "\u001B[38;5;208m";
+    private static final String TURQUOISE = "\u001B[38;5;51m";
+    private static final String GRIS = "\u001B[90m";
 
     private static final String MARGE = "      ";
 
@@ -47,13 +48,18 @@ public class VueConsole implements Vue {
             int num = b.getNumero();
             String affichageBorne = "";
             Borne.Statut st = b.getStatut();
+            String affichageCarteTactiqueBorne = "";
+            if (b.getCarteTactique() != null) {
+                String[] infos = analyserCarteTactique(b.getCarteTactique());
+                affichageCarteTactiqueBorne = String.format("%s", infos[1] + infos[0] + RESET);
+            }
 
             if (st == Borne.Statut.NON_RECLAMEE) {
-                affichageBorne = String.format("( %d )", num);
+                affichageBorne = String.format("( %d %s)", num, affichageCarteTactiqueBorne);
             } else if (st == Borne.Statut.RECLAMEE_J1) {
-                affichageBorne = String.format("\u001B[32m< %d ]\u001B[0m", num);
+                affichageBorne = String.format("\u001B[32m< %d %s]\u001B[0m", num, affichageCarteTactiqueBorne);
             } else if (st == Borne.Statut.RECLAMEE_J2) {
-                affichageBorne = String.format("\u001B[31m[ %d >\u001B[0m", num);
+                affichageBorne = String.format("\u001B[31m[ %d %s>\u001B[0m", num, affichageCarteTactiqueBorne);
             }
 
 
@@ -72,7 +78,6 @@ public class VueConsole implements Vue {
             // Construction affichage joueur 2
             StringBuilder sb2 = new StringBuilder();
             List<Carte> l2 = b.getCarteJoueur2();
-
             int nbCartel2 = l2.size();
             for (Carte c : l2) {
                 sb2.append(formaterCarte(c, false));
@@ -84,7 +89,20 @@ public class VueConsole implements Vue {
             
             System.out.println(MARGE + sb1.toString() + "  " + affichageBorne + "  " + sb2.toString());
         }
+
+        StringBuilder cb = new StringBuilder();
+        List<Carte> defausse = p.getDefausse();
+        for (Carte c : defausse) {
+            cb.append(formaterCarte(c, false));
+        }
+        if (defausse.size() > 0) {
+            System.out.println(MARGE + "Défausse : " + cb.toString());
+        }
+
         System.out.println("\n" + MARGE + "Pioche : " + p.getPioche().size() + " carte(s) restante(s)");
+        if (p.getPiocheTactique() != null) {
+            System.out.println(MARGE + "Pioche tactique : " + p.getPiocheTactique().size() + " carte(s) restante(s)");
+        }
     }
 
     private String formaterCarte(Carte c, boolean alignerDroite) {
@@ -92,7 +110,13 @@ public class VueConsole implements Vue {
             return String.format("%" + LARGEUR_CARTE + "s", "");
         } 
 
-        String[] infos = analyserCarte(c.getNom());
+
+        String[] infos;
+        if (c instanceof CarteTactique) {
+            infos = analyserCarteTactique((CarteTactique) c);
+        } else {
+            infos = analyserCarte(c.getNom());
+        }
         String numero = infos[0];
         String codeCouleur = infos[1];
 
@@ -153,6 +177,27 @@ public class VueConsole implements Vue {
         return new String[]{numero, couleur};
     }
 
+    private String[] analyserCarteTactique(CarteTactique c) {
+        String numero = "?";
+        String couleur = RESET;
+
+        switch (c.getTypeTactique()) {
+            case JOKER: numero = "Joker"; break;
+            case ESPION: numero = "Espion"; break;
+            case PORTEBOUCLIER: numero = "PorteBouclier"; break;
+            case COLINMAILLARD: numero = "Colin"; break;
+            case COMBATDEBOUE: numero = "Combat"; break;
+            case CHASSEURDETETE: numero = "Chasseur de tête"; break;
+            case STRATEGE: numero = "Stratège"; break;
+            case BANSHEE: numero = "Banshee"; break;
+            case TRAITRE: numero = "Traître"; break;
+        }
+
+        couleur = TURQUOISE;
+
+        return new String[]{numero, couleur};
+    }
+
     public void afficherParamètres(Jeu j){
         System.out.println("\n" + MARGE + "#####  PARAMETRES #####");
         System.out.println(MARGE + "[M] Mode de Jeu : " + j.getModeDeJeu().getName());
@@ -165,7 +210,7 @@ public class VueConsole implements Vue {
         System.out.println(MARGE + "[ ] Que voulez-vous faire ?");
     }
 
-    public void afficherChoixModeDeJeux(ModeDeJeu m){
+    public void afficherChoixModeDeJeux(){
         System.out.println("#####  MODE DE JEU #####");
         System.out.println("[C] Classique");
         System.out.println("[T] Tactique");
@@ -197,6 +242,7 @@ public class VueConsole implements Vue {
         for (int i = 0; i < main.size(); i++) {
             Carte c = main.get(i);
             System.out.print(String.format(" %s  ", formaterCarte(c, false)));
+
         }
         System.out.print("\n");
         System.out.println();

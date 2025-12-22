@@ -20,28 +20,70 @@ public class Combinaison {
     private int somme_valeur;
 
     public void setType(List<Carte> lc){
+        
         lc.sort(Comparator.comparingInt(c -> c.getValeur().getNumero()));
-        int c1_val = lc.get(0).getValeur().getNumero();
-        int c2_val = lc.get(1).getValeur().getNumero();
-        int c3_val = lc.get(2).getValeur().getNumero();
-        CarteNormale.Couleur c1_coul = lc.get(0).getCouleur();
-        CarteNormale.Couleur c2_coul = lc.get(1).getCouleur();
-        CarteNormale.Couleur c3_coul = lc.get(2).getCouleur();
-
-        if (c1_val + 1 == c2_val && c1_val + 2 == c3_val) {
-            if (c1_coul == c2_coul && c2_coul == c3_coul) {
-                this.type = TypeCombinaison.SUITE_COULEUR;
-            }
-            else {
-                this.type = TypeCombinaison.SUITE;
-            }
-        } else if (c1_coul == c2_coul && c2_coul == c3_coul) {
+        
+        if (isSuite(lc) && isMemeCouleur(lc)) {
+            this.type = TypeCombinaison.SUITE_COULEUR;
+        } 
+        else if (isMemeCouleur(lc)) {
             this.type = TypeCombinaison.COULEUR;
-        } else if (c1_val == c2_val && c2_val == c3_val) {
+        }
+        else if (isMemeValeur(lc)) {
             this.type = TypeCombinaison.BRELAN;
-        } else {
+        }
+        else if (isSuite(lc)) {
+            this.type = TypeCombinaison.SUITE;
+        }
+        else {
             this.type = TypeCombinaison.SOMME;
         }
+    }
+    
+    private boolean isSuite(List<Carte> lc) {
+        for (int i = 0; i <= lc.size() - 3; i++) {
+            boolean estSuite = true;
+            for (int j = i + 1; j < i + 3; j++) {
+                int valActuelle = lc.get(j).getValeur().getNumero();
+                int valPrecedente = lc.get(j - 1).getValeur().getNumero();
+                if (valActuelle != valPrecedente + 1) {
+                    estSuite = false;
+                    break;
+                }
+            }
+            if (estSuite) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean isMemeCouleur(List<Carte> lc) {
+        // Compter les occurrences de chaque couleur
+        java.util.Map<CarteNormale.Couleur, Integer> compteurs = new java.util.HashMap<>();
+        for (Carte c : lc) {
+            compteurs.put(c.getCouleur(), compteurs.getOrDefault(c.getCouleur(), 0) + 1);
+        }
+        for (int count : compteurs.values()) {
+            if (count >= 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean isMemeValeur(List<Carte> lc) {
+        // Compter les occurrences de chaque valeur
+        java.util.Map<CarteNormale.Valeur, Integer> compteurs = new java.util.HashMap<>();
+        for (Carte c : lc) {
+            compteurs.put(c.getValeur(), compteurs.getOrDefault(c.getValeur(), 0) + 1);
+        }
+        for (int count : compteurs.values()) {
+            if (count >= 3) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setSommeValeur(List<Carte> lc){

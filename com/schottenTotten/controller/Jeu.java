@@ -21,9 +21,13 @@ public class Jeu {
 
     public Plateau getPlateau() { return this.plateau; }
     public Joueur getJoueur(int i) { return this.joueurs[i]; }
+    public Joueur getAutreJoueur(Joueur j) {
+        return (joueurs[0] == j) ? joueurs[1] : joueurs[0];
+    }
     public ModeDeJeu getModeDeJeu() { return this.mode; }
     public int getIndexJoueurCourant() { return this.indexJoueurCourant; }
     public int getNbJoueurs() { return this.nbJoueurs; }
+    public Vue getVue() { return this.vue; }
 
     public void setPlateau(Plateau p) { this.plateau = p; }
     public void setJoueur(Joueur j, int i) { this.joueurs[i] = j; }
@@ -168,12 +172,12 @@ public class Jeu {
             Joueur j = getJoueur(indexJoueurCourant);
 
             if (j.isAI()){
-                joueTourIA(j);
+                mode.joueTourIA(this, j);
             } else {
                 vue.afficherPlateau(plateau, mode);
                 vue.afficherMain(j.getNom(), j.getMain());
-                
-                joueTour(sc, j);
+
+                mode.jouerTour(this, sc, j);
             }
 
             finJeu = estTerminee(j, plateau);
@@ -191,7 +195,7 @@ public class Jeu {
     public void boucleChoixModeDeJeu(Scanner sc){
         boolean finParam = false;
         while (!finParam) {
-            vue.afficherChoixModeDeJeux(this.mode);
+            vue.afficherChoixModeDeJeux();
             String e = sc.nextLine();
 
             if (e.equals("C")) {
@@ -263,13 +267,11 @@ public class Jeu {
     }
 
     public Jeu() {
-        this.mode = new ModeClassique();
+        this.mode = new ModeTactique();
         this.joueurs = new Joueur[this.nbJoueurs];
         for (int i = 0; i < joueurs.length; i++) {
            this.joueurs[i] = new Joueur("Joueur "+(i+1), null);
         }
-        /*this.joueurs[0] = new Joueur("T", new Combine());
-        this.joueurs[1] = new Joueur("CACA", new Combine());*/
         this.indexJoueurCourant = 0;
         this.plateau = new Plateau(mode.getNbBornes());
         this.vue = new VueConsole();

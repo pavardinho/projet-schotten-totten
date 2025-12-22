@@ -24,17 +24,11 @@ public class CarteTactique extends Carte{
 
     private TypeTactique type;
 
+    public TypeTactique getTypeTactique(){ return this.type; }
 
     public CarteTactique(TypeTactique type){
         super(type.name());
         this.type = type;
-    }
-
-    public TypeTactique getType(){ return this.type;}
-
-    /// Ici viendront les méthodes spécifiques aux cartes tactiques
-    public void appliquerEffet() {
-        System.out.println("Effet activé : " + type.getDescription());
     }
 
     @Override

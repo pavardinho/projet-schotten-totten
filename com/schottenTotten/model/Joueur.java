@@ -11,26 +11,32 @@ public class Joueur {
     private List<Carte> main;
     private Strategie strategie;
     private int nbBornesControllees;
+    private int nbCartesTactiquesJouees;
 
     public String getNom () { return this.nom; }
     public List<Carte> getMain() { return this.main; }
     public Strategie getStrategie() { return this.strategie; }
+    public int getNbCartesTactiquesJouees() { return this.nbCartesTactiquesJouees; }
 
     public void setNom(String s) { this.nom = s; }
     public void setStrategie(Strategie s) { this.strategie = s; }
 
     public void resetMain() { this.main = new ArrayList<>(); }
     public void resetNbBornesControllees() { this.nbBornesControllees = 0; }
+    public void resetNbCartesTactiquesJouees() { this.nbCartesTactiquesJouees = 0; }
 
     public Joueur(String nom, Strategie strategie){
         this.nom = nom;
         this.main = new ArrayList<>();
         this.strategie = strategie;
         this.nbBornesControllees = 0;
+        this.nbCartesTactiquesJouees = 0;
     }
 
     public void addNbBornesControllees() { this.nbBornesControllees += 1; }
     public int getNbBornesControllees() { return this.nbBornesControllees; }
+
+    public void addNbCartesTactiquesJouees() { this.nbCartesTactiquesJouees += 1; }
 
     public void recevoirCarte(Carte carte) { /// FONCITON POUR RECEVOIR UNE CARTE (A METTRE EN COMMUN AVEC LE CODE DANS CONTROLLER.JAVA)
         this.main.add(carte);
