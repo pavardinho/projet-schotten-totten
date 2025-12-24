@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.schottenTotten.model.*;
 import com.schottenTotten.model.Borne.Statut;
 import com.schottenTotten.model.CarteTactique.TypeTactique;
+import com.schottenTotten.ai.Strategie;
 
 public class ModeTactique implements ModeDeJeu{
 
@@ -547,6 +548,51 @@ public class ModeTactique implements ModeDeJeu{
     }
 
     public void joueTourIA(Jeu jeu, Joueur j){
+        Plateau plateau = jeu.getPlateau();
+        Joueur autreJoueur = jeu.getAutreJoueur(j);
+        
+        Strategie s = j.getStrategie();
+        Action a = s.choisirAction(jeu, j);
+        if (a != null){
+            Carte c = a.getCarte();
+            
+            if (c instanceof CarteTactique) {
+                CarteTactique carteTactique = (CarteTactique) c;
+                j.addNbCartesTactiquesJouees();
+                TypeTactique type = carteTactique.getTypeTactique();
+            }
+            
+            jeu.jouerCarte(j, c, a.getBorne());
+        }
+        
+        // On regarde si on peut reclamer des bornes 
+        List<Borne> bornes_reclamable = new ArrayList<Borne>();
+        for (Borne borne : plateau.getBornes()) {
+            if (peutReclamerBorne(borne.getCartesJoueur(j), borne.getCartesAutreJoueur(j), borne)) {
+                bornes_reclamable.add(borne);
+            }
+        }
+        
+        for (Borne borne : bornes_reclamable) {
+            borne.reclamerBorne(j);
+            j.addNbBornesControllees();
+        }
+        
+        // Pioche d'une carte normale ou tactique
+        if (plateau.getNbCartesPioche() > 0 && plateau.getNbCartesPiocheTactique() > 0) {
+            // L'IA choisit de manière aléatoire
+            if (Math.random() < 0.5) {
+                j.recevoirCarte(plateau.piocher());
+            } else {
+                j.recevoirCarte(plateau.piocherTactique());
+            }
+        }
+        else if (plateau.getNbCartesPioche() > 0) {
+            j.recevoirCarte(plateau.piocher());
+        }
+        else if (plateau.getNbCartesPiocheTactique() > 0) {
+            j.recevoirCarte(plateau.piocherTactique());
+        }
     }
     
     public String getName(){ return "Tactique"; }
